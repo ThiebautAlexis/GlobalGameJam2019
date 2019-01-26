@@ -22,6 +22,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] Tilemap tilemap; 
     public Tilemap Tilemap { get { return tilemap; } }
     [SerializeField] private List<Cell> cells = new List<Cell>();
+    public List<Cell> Cells { get { return cells; } }
     #endregion
 
     #region Methods
@@ -105,6 +106,9 @@ public class GridManager : MonoBehaviour
             return _dir ;
         else return Vector3.zero; 
     }
+
+
+
     #endregion
 
     #region UnityMethods

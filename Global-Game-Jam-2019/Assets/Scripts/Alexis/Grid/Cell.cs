@@ -24,6 +24,11 @@ public class Cell
     public List<Vector2> LinkedPosition = new List<Vector2>();
     private CellState state = CellState.Free; 
     public CellState State { get { return state; } }
+
+    public float HeuristicCostFromStart { get; set; } = 0;
+    public float HeuristicCostToDestination { get; set; } = 0;
+    public float HeuristicCostTotal { get; set; } = 0; 
+    public bool HasBeenSelected { get; set; } = false; 
     #endregion
 
     #region Constructor

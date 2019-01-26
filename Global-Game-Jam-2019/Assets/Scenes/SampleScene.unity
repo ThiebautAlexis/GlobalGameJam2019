@@ -3087,6 +3087,7 @@ MonoBehaviour:
   speed: 1
   maxEnergy: 100
   energy: 100
+  waterJetCost: 2
   waterJetRange: 1
   waterJetPrefab: {fileID: 2248486544862190346, guid: 8dc107dfa758ba24aa72ceea2333fabe,
     type: 3}

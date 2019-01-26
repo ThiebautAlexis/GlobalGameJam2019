@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq; 
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 /*
  * Character:
@@ -49,7 +51,7 @@ public class Character : MonoBehaviour
 
     private Orientation orientation = Orientation.SouthEast; 
 
-    List<Cell> cellPath = new List<Cell>(); 
+    List<Vector2> cellPath = new List<Vector2>(); 
     #endregion
 
     #region Methods
@@ -62,8 +64,9 @@ public class Character : MonoBehaviour
             _hit = (Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 1, cellLayer)); 
             if(_hit)
             {
-                Cell _c = GridManager.Instance.GetClosestCell(_hit.point); 
-                Debug.Log($"Move To {_c.TilePosition}!");
+                Cell _destination = GridManager.Instance.GetClosestCell(_hit.point);
+                Cell _origin = GridManager.Instance.GetClosestCell(transform.position);
+                cellPath = CalculatePath(_origin, _destination); 
             }
         }
         else if(Input.GetKeyDown(KeyCode.Mouse1) && energy > 0)
@@ -86,6 +89,129 @@ public class Character : MonoBehaviour
     {
 
     }
+
+
+    /// <summary>
+    /// Calculate path from an origin to a destination 
+    /// Set the path when it can be calculated 
+    /// </summary>
+    /// <returns>Return if the path can be calculated</returns>
+    public List<Vector2> CalculatePath(Cell _origin, Cell _destination)
+    {
+        List<Cell> _cellDatas = GridManager.Instance.Cells; 
+        //Open list that contains all heuristically calculated triangles 
+        List<Cell> _openList = new List<Cell>();
+        //returned path
+        Dictionary<Cell, Cell> _cameFrom = new Dictionary<Cell, Cell>();
+
+        /* ASTAR: Algorithm*/
+        // Add the origin point to the open and close List
+        // Set its heuristic cost and its selection state
+        _openList.Add(_origin);
+        _origin.HeuristicCostFromStart = 0;
+        _origin.HasBeenSelected = true;
+        _cameFrom.Add(_origin, _origin); 
+        float _cost = 0;
+        Cell _currentCell;
+        while (_openList.Count > 0)
+        {
+            //Get the point with the best heuristic cost
+            _currentCell = GetBestCell(_openList);
+            //If this point is in the targeted triangle, 
+            if (_currentCell == _destination)
+            {
+                _cost = _currentCell.HeuristicCostFromStart + 1;
+                _destination.HeuristicCostFromStart = _cost;
+                //add the destination point to the close list and set the previous point to the current point or to the parent of the current point if it is in Line of sight 
+
+                //_cameFrom.Add(_currentCell, _currentCell);
+
+                //Clear all points selection state
+                foreach (Cell c in _cellDatas)
+                {
+                    c.HasBeenSelected = false;
+                }
+                //Build the path
+                return BuildPath(_cameFrom);
+            }
+            //Get all linked points from the current point
+            //_linkedPoints = GetLinkedPoints(_currentPoint, trianglesDatas);
+            for (int i = 0; i < _currentCell.LinkedPosition.Count; i++)
+            {
+                Cell _linkedCell = _cellDatas.Where(c => c.TilePosition == _currentCell.LinkedPosition[i]).FirstOrDefault();
+                // If the linked points is not selected yet
+                if (!_linkedCell.HasBeenSelected)
+                {
+                    // Calculate the heuristic cost from start of the linked point
+                    _cost = _currentCell.HeuristicCostFromStart + 1;
+                    _linkedCell.HeuristicCostFromStart = _cost;
+                    if (!_openList.Contains(_linkedCell) || _cost < _linkedCell.HeuristicCostFromStart)
+                    {
+                        // Set the heuristic cost from start for the linked point
+                        _linkedCell.HeuristicCostFromStart = _cost;
+                        //Its heuristic cost is equal to its cost from start plus the heuristic cost between the point and the destination
+                        _linkedCell.HeuristicCostTotal = Vector3.Distance(_linkedCell.TilePosition, _destination.TilePosition) + _cost;
+                        //Set the point selected and add it to the open and closed list
+                        _linkedCell.HasBeenSelected = true;
+                        _openList.Add(_linkedCell);
+                        _cameFrom.Add(_linkedCell, _currentCell);
+                    }
+                }
+            }
+        }
+        foreach (Cell c in _cellDatas)
+        {
+            c.HasBeenSelected = false;
+        }
+        return null;
+    }
+
+
+    /// <summary>
+    /// Get the triangle with the best heuristic cost from a list 
+    /// Remove this point from the list and return it
+    /// </summary>
+    /// <param name="_cells">list where the points are</param>
+    /// <returns>point with the best heuristic cost</returns>
+    Cell GetBestCell(List<Cell> _cells)
+    {
+        int bestIndex = 0;
+        for (int i = 0; i < _cells.Count; i++)
+        {
+            if (_cells[i].HeuristicCostTotal < _cells[bestIndex].HeuristicCostTotal)
+            {
+                bestIndex = i;
+            }
+        }
+
+        Cell _bestCell = _cells[bestIndex];
+        _cells.RemoveAt(bestIndex);
+        return _bestCell;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_pathToBuild"></param>
+    /// <returns></returns>
+    List<Vector2> BuildPath(Dictionary<Cell, Cell> _pathToBuild)
+    {
+        #region BuildingAbsolutePath
+        // Building absolute path -> Link all triangle's CenterPosition together
+        // Adding _origin and destination to the path
+        Cell _currentCell = _pathToBuild.Last().Key;
+        List<Vector2> _absoluteTrianglePath = new List<Vector2>();
+        while (_currentCell != _pathToBuild.First().Key)
+        {
+            _absoluteTrianglePath.Add(_currentCell.TilePosition);
+            _currentCell = _pathToBuild[_currentCell];
+        }
+        _absoluteTrianglePath.Add(_currentCell.TilePosition);
+        //Reverse the path to start at the origin 
+        _absoluteTrianglePath.Reverse();
+        return _absoluteTrianglePath; 
+        #endregion
+    }
     #endregion
 
     #region UnityMethod
@@ -99,6 +225,14 @@ public class Character : MonoBehaviour
     void Update()
     {
         CheckInput(); 
+    }
+
+    private void OnDrawGizmos()
+    {
+        for (int i = 0; i < cellPath.Count; i++)
+        {
+            Gizmos.DrawSphere(cellPath[i], .5f); 
+        }
     }
     #endregion
 }
