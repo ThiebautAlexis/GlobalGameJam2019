@@ -51,10 +51,37 @@ public class Character : MonoBehaviour
 
     private Orientation orientation = Orientation.SouthEast; 
 
-    List<Vector2> cellPath = new List<Vector2>(); 
     #endregion
 
     #region Methods
+    IEnumerator FollowPath(List<Vector2> _pathToFollow)
+    {
+        isMoving = true; 
+        List<Vector2> _path = _pathToFollow;
+        int _index = 0; 
+        while(Vector3.Distance(transform.position, _pathToFollow.Last()) > .1f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _pathToFollow[_index], Time.deltaTime * speed);
+            if(Vector3.Distance(transform.position, _pathToFollow[_index]) < .1f)
+            {
+                currentCell = GridManager.Instance.GetCellFromPosition(_pathToFollow[_index]);
+                _index++;
+                energy--; 
+                if (_index >= _pathToFollow.Count)
+                {
+                    
+                    isMoving = false;
+                    yield break; 
+                }
+                Vector2 _dir = _pathToFollow[_index] - currentCell.TilePosition;
+                UpdateOrientation(_dir); 
+
+            }
+            yield return new WaitForEndOfFrame();
+        }
+        isMoving = false; 
+    }
+
     void CheckInput()
     {
         if (isMoving || !GridManager.Instance) return;
@@ -65,8 +92,15 @@ public class Character : MonoBehaviour
             if(_hit)
             {
                 Cell _destination = GridManager.Instance.GetClosestCell(_hit.point);
+                if (_destination.State == CellState.NonNavigable) return; 
                 Cell _origin = GridManager.Instance.GetClosestCell(transform.position);
-                cellPath = CalculatePath(_origin, _destination); 
+                if (_destination == _origin) return; 
+                List<Vector2> _cellPath = CalculatePath(_origin, _destination);
+                if (_cellPath == null)
+                {
+                    return;
+                }
+                StartCoroutine(FollowPath(_cellPath)); 
             }
         }
         else if(Input.GetKeyDown(KeyCode.Mouse1) && energy > 0)
@@ -75,9 +109,9 @@ public class Character : MonoBehaviour
             if(_hit)
             {
                 Cell _c = GridManager.Instance.GetClosestCell(_hit.point);
-
                 Vector3 _dir = GridManager.Instance.GetStraightLine(currentCell, _c);
                 if (_dir == Vector3.zero) return;
+                UpdateOrientation(_dir); 
                 WaterJet _jet = Instantiate(waterJetPrefab, transform.position, Quaternion.identity).GetComponent<WaterJet>();
                 _jet.ApplyDirection(_dir, WaterJetRange);
                 Energy -= waterJetCost;
@@ -85,11 +119,18 @@ public class Character : MonoBehaviour
         }
     }
 
-    void FireWaterJet()
+    void UpdateOrientation(Vector2 _dir)
     {
-
+        float _angle = Vector2.SignedAngle(Vector2.right, _dir);
+        //Si compris entre 0 et 90 -> NE
+        if (_angle > 0 && _angle < 90) orientation = Orientation.NorthEast;
+        //Si compris entre 90 et 180 -> NW
+        if (_angle > 90 && _angle < 180) orientation = Orientation.NorthWest;
+        //Si compris entre 0 et -90 -> SE
+        if (_angle < 0 && _angle > -90) orientation = Orientation.SouthEast;
+        //Si comrpis entre -90 et -180 -> SW
+        else orientation = Orientation.SouthWest;
     }
-
 
     /// <summary>
     /// Calculate path from an origin to a destination 
@@ -140,7 +181,7 @@ public class Character : MonoBehaviour
             {
                 Cell _linkedCell = _cellDatas.Where(c => c.TilePosition == _currentCell.LinkedPosition[i]).FirstOrDefault();
                 // If the linked points is not selected yet
-                if (!_linkedCell.HasBeenSelected)
+                if (!_linkedCell.HasBeenSelected && _linkedCell.State == CellState.Free)
                 {
                     // Calculate the heuristic cost from start of the linked point
                     _cost = _currentCell.HeuristicCostFromStart + 1;
@@ -166,9 +207,8 @@ public class Character : MonoBehaviour
         return null;
     }
 
-
     /// <summary>
-    /// Get the triangle with the best heuristic cost from a list 
+    /// Get the cell with the best heuristic cost from a list 
     /// Remove this point from the list and return it
     /// </summary>
     /// <param name="_cells">list where the points are</param>
@@ -190,13 +230,12 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Reverse the path and return it
     /// </summary>
     /// <param name="_pathToBuild"></param>
-    /// <returns></returns>
+    /// <returns>return the path</returns>
     List<Vector2> BuildPath(Dictionary<Cell, Cell> _pathToBuild)
     {
-        #region BuildingAbsolutePath
         // Building absolute path -> Link all triangle's CenterPosition together
         // Adding _origin and destination to the path
         Cell _currentCell = _pathToBuild.Last().Key;
@@ -210,7 +249,6 @@ public class Character : MonoBehaviour
         //Reverse the path to start at the origin 
         _absoluteTrianglePath.Reverse();
         return _absoluteTrianglePath; 
-        #endregion
     }
     #endregion
 
@@ -225,14 +263,6 @@ public class Character : MonoBehaviour
     void Update()
     {
         CheckInput(); 
-    }
-
-    private void OnDrawGizmos()
-    {
-        for (int i = 0; i < cellPath.Count; i++)
-        {
-            Gizmos.DrawSphere(cellPath[i], .5f); 
-        }
     }
     #endregion
 }

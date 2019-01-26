@@ -107,7 +107,12 @@ public class GridManager : MonoBehaviour
         else return Vector3.zero; 
     }
 
-
+    public Cell GetCellFromPosition(Vector2 _position)
+    {
+        Cell _c = cells.Where(c => c.TilePosition == _position).FirstOrDefault();
+        if (_c == null) return GetClosestCell(_position);
+        return _c; 
+    }
 
     #endregion
 
@@ -135,20 +140,6 @@ public class GridManager : MonoBehaviour
     void Update()
     {
         
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (cells.Count == 0) return; 
-        Gizmos.color = Color.red;
-        for (int i = 0; i < cells.Count; i++)
-        {
-            if (cells[i].LinkedPosition.Count == 0) return; 
-            for (int j = 0; j < cells[i].LinkedPosition.Count; j++)
-            {
-                Gizmos.DrawLine(cells[i].TilePosition, cells[i].LinkedPosition[j]); 
-            }    
-        }
     }
     #endregion
 }
