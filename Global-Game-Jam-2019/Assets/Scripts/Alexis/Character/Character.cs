@@ -16,6 +16,8 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     #region Fields and Properties
+    private bool isMoving = false; 
+
     [SerializeField, Range(1,5)] private int speed = 1;
 
     [SerializeField, Range(10, 100)] private int maxEnergy = 100;
@@ -25,12 +27,25 @@ public class Character : MonoBehaviour
 
     [SerializeField, Range(1, 5)] private int waterJetRange = 1;
 
-    [SerializeField] private Animator characterAnimator; 
+    [SerializeField] private Animator characterAnimator;
+
+    [SerializeField] private LayerMask cellLayer;
+
+    List<Cell> cellPath = new List<Cell>(); 
     #endregion
 
     #region Methods
-    void SetDestination()
+    void CheckInput()
     {
+        if (isMoving || !GridManager.Instance) return; 
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            RaycastHit2D _hit = (Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 1, cellLayer)); 
+            if(_hit)
+            {
+                //cellPath = GridManager.Instance.ComputePath();  
+            }
+        }
     }
     #endregion
 
@@ -44,7 +59,7 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckInput(); 
     }
     #endregion
 }

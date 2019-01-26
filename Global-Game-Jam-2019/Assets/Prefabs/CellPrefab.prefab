@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6392794118510252332}
   - component: {fileID: 6392794118510252331}
   - component: {fileID: 6392794118510252333}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CellPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
