@@ -21,7 +21,7 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] Tilemap tilemap; 
     public Tilemap Tilemap { get { return tilemap; } }
-    private List<Cell> cells = new List<Cell>();
+    [SerializeField] private List<Cell> cells = new List<Cell>();
     #endregion
 
     #region Methods
@@ -90,6 +90,11 @@ public class GridManager : MonoBehaviour
     {
 
         return null; 
+    }
+
+    public Cell GetClosestCell(Vector2 _position)
+    {
+        return cells.OrderBy(c => Vector2.Distance(_position, c.TilePosition)).FirstOrDefault(); 
     }
     #endregion
 

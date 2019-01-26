@@ -37,13 +37,23 @@ public class Character : MonoBehaviour
     #region Methods
     void CheckInput()
     {
-        if (isMoving || !GridManager.Instance) return; 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (isMoving || !GridManager.Instance) return;
+        RaycastHit2D _hit; 
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            RaycastHit2D _hit = (Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 1, cellLayer)); 
+            _hit = (Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 1, cellLayer)); 
             if(_hit)
             {
-                //cellPath = GridManager.Instance.ComputePath();  
+                Cell _c = GridManager.Instance.GetClosestCell(_hit.point); 
+                Debug.Log($"Move To {_c.TilePosition}!");
+            }
+        }
+        else if(Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            _hit = (Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 1, cellLayer));
+            if(_hit)
+            {
+                Debug.Log("Water jet!"); 
             }
         }
     }
