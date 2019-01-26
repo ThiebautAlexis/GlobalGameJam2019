@@ -22,7 +22,8 @@ public class Cell
     #region Field and properties
     public Vector2 TilePosition;
     public List<Vector2> LinkedPosition = new List<Vector2>();
-
+    private CellState state = CellState.Free; 
+    public CellState State { get { return state; } }
     #endregion
 
     #region Constructor
@@ -34,6 +35,18 @@ public class Cell
     #endregion
 
     #region Methods
-
+    public void CleanCell()
+    {
+        if (state == CellState.Dirty) state = CellState.Free;
+    }
+    public void MakeCellDirty() => state = CellState.Dirty;
+    public void MakeCellNonNavigable() => state = CellState.NonNavigable;
     #endregion
+}
+
+public enum CellState
+{
+    Free, 
+    NonNavigable, 
+    Dirty
 }

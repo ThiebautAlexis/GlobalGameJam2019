@@ -96,6 +96,15 @@ public class GridManager : MonoBehaviour
     {
         return cells.OrderBy(c => Vector2.Distance(_position, c.TilePosition)).FirstOrDefault(); 
     }
+
+    public Vector3 GetStraightLine(Cell _start, Cell _end)
+    {
+        Vector3 _dir = (_end.TilePosition - _start.TilePosition).normalized;
+        Vector3 _orthoCellSize = new Vector3(tilemap.cellSize.x, -tilemap.cellSize.y, 0).normalized;
+        if (_dir == tilemap.cellSize.normalized || _dir == -tilemap.cellSize.normalized || _dir == _orthoCellSize || _dir == -_orthoCellSize)
+            return _dir ;
+        else return Vector3.zero; 
+    }
     #endregion
 
     #region UnityMethods
