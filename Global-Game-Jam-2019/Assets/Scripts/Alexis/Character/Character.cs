@@ -26,6 +26,7 @@ public class Character : MonoBehaviour
             return energy <= maxEnergy / 2;
         }
     }
+    private bool isLookingRight = true; 
 
     [SerializeField, Range(1,5)] private int speed = 1;
 
@@ -92,7 +93,6 @@ public class Character : MonoBehaviour
                 }
                 Vector2 _dir = _pathToFollow[_index] - currentCell.TilePosition;
                 UpdateOrientation(_dir); 
-
             }
             yield return new WaitForEndOfFrame();
         }
@@ -146,33 +146,14 @@ public class Character : MonoBehaviour
         //Si compris entre 0 et 90 -> NE
         if (_angle > 0 && _angle < 90) orientation = Orientation.NorthEast;
         //Si compris entre 90 et 180 -> NW
-        if (_angle > 90 && _angle < 180) orientation = Orientation.NorthWest;
+        else if (_angle > 90 && _angle < 180) orientation = Orientation.NorthWest;
         //Si compris entre 0 et -90 -> SE
-        if (_angle < 0 && _angle > -90) orientation = Orientation.SouthEast;
+        else if (_angle < 0 && _angle > -90) orientation = Orientation.SouthEast;
         //Si comrpis entre -90 et -180 -> SW
         else orientation = Orientation.SouthWest;
-        characterAnimator.SetBool("IsLookingNorth", orientation == Orientation.NorthEast || orientation == Orientation.NorthWest);
-        switch (orientation)
-        {
-            case Orientation.NorthWest:
-                if (_previousOrientation == Orientation.NorthEast || _previousOrientation == Orientation.SouthEast)
-                    renderer.flipX = true; 
-                break;
-            case Orientation.NorthEast:
-                if (_previousOrientation == Orientation.NorthWest || _previousOrientation == Orientation.SouthWest)
-                    renderer.flipX = false;
-                break;
-            case Orientation.SouthWest:
-                if (_previousOrientation == Orientation.NorthEast || _previousOrientation == Orientation.SouthEast)
-                    renderer.flipX = true;
-                break;
-            case Orientation.SouthEast:
-                if (_previousOrientation == Orientation.NorthWest || _previousOrientation == Orientation.SouthWest)
-                    renderer.flipX = false;
-                break;
-            default:
-                break;
-        }
+
+        //Check si on doit inverser le sprite ou non -> Pour le faire regarder dans les 2 directions
+        
     }
 
     /// <summary>
