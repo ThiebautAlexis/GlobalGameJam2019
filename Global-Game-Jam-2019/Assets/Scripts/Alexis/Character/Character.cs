@@ -19,7 +19,13 @@ public class Character : MonoBehaviour
 {
     #region Fields and Properties
     private bool isMoving = false; 
-    public bool IsExhausted { get { return energy <= maxEnergy / 2;  } }
+    public bool IsExhausted
+    {
+        get
+        {
+            return energy <= maxEnergy / 2;
+        }
+    }
 
     [SerializeField, Range(1,5)] private int speed = 1;
 
@@ -35,16 +41,25 @@ public class Character : MonoBehaviour
         set
         {
             energy = value;
-            Mathf.Clamp(energy, 0, maxEnergy); 
+            Mathf.Clamp(energy, 0, maxEnergy);
+            characterAnimator.SetBool("IsExhausted", IsExhausted); 
         }
     }
 
     [SerializeField, Range(1, 5)] private int waterJetCost = 2;
     [SerializeField, Range(1, 5)] private int waterJetRange = 1;
-    public int WaterJetRange { get { return IsExhausted ? waterJetRange /2 : waterJetRange;  } }
+    public int WaterJetRange
+    {
+        get
+        {
+            return IsExhausted ? waterJetRange / 2 : waterJetRange;
+        }
+    }
+
     [SerializeField] WaterJet waterJetPrefab; 
 
     [SerializeField] private LayerMask cellLayer;
+    [SerializeField] private SpriteRenderer renderer; 
     private Cell currentCell;
     public Cell CurrentCell { get { return currentCell; } }
 
@@ -57,7 +72,8 @@ public class Character : MonoBehaviour
     #region Methods
     IEnumerator FollowPath(List<Vector2> _pathToFollow)
     {
-        isMoving = true; 
+        isMoving = true;
+        characterAnimator.SetBool("IsMoving", true); 
         List<Vector2> _path = _pathToFollow;
         int _index = 0; 
         while(Vector3.Distance(transform.position, _pathToFollow.Last()) > .1f)
@@ -67,10 +83,10 @@ public class Character : MonoBehaviour
             {
                 currentCell = GridManager.Instance.GetCellFromPosition(_pathToFollow[_index]);
                 _index++;
-                energy--; 
+                Energy--; 
                 if (_index >= _pathToFollow.Count)
                 {
-                    
+                    characterAnimator.SetBool("IsMoving", false);
                     isMoving = false;
                     yield break; 
                 }
@@ -80,8 +96,9 @@ public class Character : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
-        isMoving = false; 
-        if(currentCell.State == CellState.House) HouseManager.Instance.StartRegeneration(); 
+        isMoving = false;
+        characterAnimator.SetBool("IsMoving", false);
+        if (currentCell.State == CellState.House) HouseManager.Instance.StartRegeneration(); 
     }
 
     void CheckInput()
@@ -113,7 +130,8 @@ public class Character : MonoBehaviour
                 Cell _c = GridManager.Instance.GetClosestCell(_hit.point);
                 Vector3 _dir = GridManager.Instance.GetStraightLine(currentCell, _c);
                 if (_dir == Vector3.zero) return;
-                UpdateOrientation(_dir); 
+                UpdateOrientation(_dir);
+                characterAnimator.SetTrigger("SprayWater"); 
                 WaterJet _jet = Instantiate(waterJetPrefab, transform.position, Quaternion.identity).GetComponent<WaterJet>();
                 _jet.ApplyDirection(_dir, WaterJetRange);
                 Energy -= waterJetCost;
@@ -123,6 +141,7 @@ public class Character : MonoBehaviour
 
     void UpdateOrientation(Vector2 _dir)
     {
+        Orientation _previousOrientation = orientation; 
         float _angle = Vector2.SignedAngle(Vector2.right, _dir);
         //Si compris entre 0 et 90 -> NE
         if (_angle > 0 && _angle < 90) orientation = Orientation.NorthEast;
@@ -132,6 +151,28 @@ public class Character : MonoBehaviour
         if (_angle < 0 && _angle > -90) orientation = Orientation.SouthEast;
         //Si comrpis entre -90 et -180 -> SW
         else orientation = Orientation.SouthWest;
+        characterAnimator.SetBool("IsLookingNorth", orientation == Orientation.NorthEast || orientation == Orientation.NorthWest);
+        switch (orientation)
+        {
+            case Orientation.NorthWest:
+                if (_previousOrientation == Orientation.NorthEast || _previousOrientation == Orientation.SouthEast)
+                    renderer.flipX = true; 
+                break;
+            case Orientation.NorthEast:
+                if (_previousOrientation == Orientation.NorthWest || _previousOrientation == Orientation.SouthWest)
+                    renderer.flipX = false;
+                break;
+            case Orientation.SouthWest:
+                if (_previousOrientation == Orientation.NorthEast || _previousOrientation == Orientation.SouthEast)
+                    renderer.flipX = true;
+                break;
+            case Orientation.SouthEast:
+                if (_previousOrientation == Orientation.NorthWest || _previousOrientation == Orientation.SouthWest)
+                    renderer.flipX = false;
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -258,7 +299,10 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentCell = GridManager.Instance.GetClosestCell(transform.position); 
+        currentCell = GridManager.Instance.GetClosestCell(transform.position);
+        if (!characterAnimator) characterAnimator = GetComponent<Animator>();
+        if (!renderer) renderer = GetComponent<SpriteRenderer>();
+
     }
 
     // Update is called once per frame
