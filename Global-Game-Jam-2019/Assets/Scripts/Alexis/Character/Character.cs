@@ -26,6 +26,9 @@ public class Character : MonoBehaviour
     [SerializeField, Range(10, 100)] private int maxEnergy = 100;
     public int MaxEnergy { get { return maxEnergy; } }
     [SerializeField] int energy = 100;
+
+    [SerializeField] public AudioManager audio;
+
     public int Energy
     {
         get
@@ -56,11 +59,43 @@ public class Character : MonoBehaviour
     #region Methods
     IEnumerator FollowPath(List<Vector2> _pathToFollow)
     {
-        isMoving = true; 
+        isMoving = true;
+        float timecount = 0.0f;
+        
         List<Vector2> _path = _pathToFollow;
         int _index = 0; 
         while(Vector3.Distance(transform.position, _pathToFollow.Last()) > .1f)
         {
+            int rand_son = UnityEngine.Random.Range(1, 7);
+            float rand_pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+            timecount -= Time.deltaTime;
+            if(timecount < 0.0f)
+            {
+                switch (rand_son)
+                {
+                    case 1:
+
+                        audio.Play("run1", rand_pitch);
+                        break;
+                    case 2:
+                        audio.Play("run2", rand_pitch);
+                        break;
+                    case 3:
+                        audio.Play("run3", rand_pitch);
+                        break;
+                    case 4:
+                        audio.Play("run4", rand_pitch);
+                        break;
+                    case 5:
+                        audio.Play("run5", rand_pitch);
+                        break;
+                    case 6:
+                        audio.Play("run6", rand_pitch);
+                        break;
+                }
+                timecount = 0.5f;
+            }
+            
             transform.position = Vector3.MoveTowards(transform.position, _pathToFollow[_index], Time.deltaTime * speed);
             if(Vector3.Distance(transform.position, _pathToFollow[_index]) < .1f)
             {

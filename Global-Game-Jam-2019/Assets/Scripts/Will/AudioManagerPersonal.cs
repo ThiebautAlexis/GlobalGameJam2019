@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 
-public class AudioManagerPersonal : MonoBehaviour
+/*public class AudioManagerPersonal : MonoBehaviour
 {
     #region F/P
     public static AudioManagerPersonal Instance;
@@ -37,5 +37,5 @@ public class AudioManagerPersonal : MonoBehaviour
     {
         PlaySound("Theme");
     }
-    #endregion
-}
+    #endregion*/
+//}
