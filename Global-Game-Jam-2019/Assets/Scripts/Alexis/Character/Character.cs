@@ -84,7 +84,7 @@ public class Character : MonoBehaviour
         int _index = 0; 
         while(Vector3.Distance(transform.position, _pathToFollow.Last()) > .1f)
         {
-            int rand_son = UnityEngine.Random.Range(1, 7);
+            int rand_son = UnityEngine.Random.Range(1, 8);
             float rand_pitch = UnityEngine.Random.Range(0.5f, 1.5f);
             timecount -= Time.deltaTime;
             if(timecount < 0.0f)
@@ -110,8 +110,11 @@ public class Character : MonoBehaviour
                     case 6:
                         audio.Play("run6", rand_pitch);
                         break;
+                    case 7:
+                        audio.Play("run7", rand_pitch);
+                        break;
                 }
-                timecount = 0.5f;
+                timecount = 0.3f;
             }
             
             transform.position = Vector3.MoveTowards(transform.position, _pathToFollow[_index], Time.deltaTime * speed);
@@ -174,7 +177,19 @@ public class Character : MonoBehaviour
                 Vector3 _dir = GridManager.Instance.GetStraightLine(currentCell, _c);
                 if (_dir == Vector3.zero) return;
                 UpdateOrientation(_dir);
-                characterAnimator.SetTrigger("SprayWater"); 
+                characterAnimator.SetTrigger("SprayWater");
+                int rand_son = UnityEngine.Random.Range(1, 3);
+                float rand_pitch = UnityEngine.Random.Range(0.5f, 1.5f);
+                switch (rand_son)
+                {
+                    case 1:
+
+                    audio.Play("shot1", rand_pitch);
+                    break;
+                    case 2:
+                    audio.Play("shot2", rand_pitch);
+                    break;
+                }
                 WaterJet _jet = Instantiate(waterJetPrefab, transform.position, Quaternion.identity).GetComponent<WaterJet>();
                 float _angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
                 _jet.transform.rotation = Quaternion.AngleAxis(_angle, Vector3.forward);

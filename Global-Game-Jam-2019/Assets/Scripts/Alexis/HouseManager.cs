@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class HouseManager : MonoBehaviour
 {
-    public static HouseManager Instance; 
+    public static HouseManager Instance;
 
+    [SerializeField] AudioManager audio;
     Cell houseCell;
     [SerializeField, Range(1,25)] private int regenerationAmountPerSeconds = 5;
     [SerializeField] private GameObject debugSprite; 
@@ -37,19 +38,55 @@ public class HouseManager : MonoBehaviour
     public void StartRegeneration()
     {
         if (debugSprite) debugSprite.SetActive(true);
-        StartCoroutine(RegeneratePlayer()); 
+        {
+            StartCoroutine(RegeneratePlayer());
+            audio.Volume("Musique ambiance",0.4f);
+            audio.Play("rest");
+        }
+        
     }
     void StopRegeneration()
     {
         if (debugSprite) if (debugSprite) debugSprite.SetActive(false);
+        audio.Stop("rest");
+        audio.Volume("Musique ambiance", 0.8f);
     }
     IEnumerator RegeneratePlayer()
     {
+        int count = 0;
         if (houseCell == null || character == null) yield break;
         SpriteRenderer _renderer = character.GetComponent<SpriteRenderer>();
         while (character.CurrentCell == houseCell)
         {
+           
             character.Energy += regenerationAmountPerSeconds;
+            switch (count)
+            {
+                case 0:
+                    audio.Play("up1");
+                    count++;
+                    break;
+                case 1:
+                    audio.Play("up2");
+                    count++;
+                    break;
+                case 2:
+                    audio.Play("up3");
+                    count++;
+                    break;
+                case 3:
+                    audio.Play("up4");
+                    count++;
+                    break;
+                case 4:
+                    audio.Play("up5");
+                    count++;
+                    break;
+                case 5:
+                    audio.Play("up6");
+                    count = 0;
+                    break;
+            }
             yield return new WaitForSeconds(1); 
         }
         StopRegeneration(); 

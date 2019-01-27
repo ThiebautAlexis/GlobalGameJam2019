@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2987549874177955721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2987549874177955723}
+  - component: {fileID: 2987549874177955720}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2987549874177955723
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2987549874177955721}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7907677, y: -0.20237139, z: 0.76412696}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2987549874177955720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2987549874177955721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 938c4b5528a7f4d438e6b182d4dbd034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Musique ambiance
+    clip: {fileID: 8300000, guid: 23628305756bd894daa458fcf8ea6f64, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Ambiance
+    clip: {fileID: 8300000, guid: 393d8ea73d9de2842aa31c064a00a988, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Musique ambiance
+    clip: {fileID: 8300000, guid: 23628305756bd894daa458fcf8ea6f64, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: walk1
+    clip: {fileID: 8300000, guid: 548944c697047d142af3497395c8ba59, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: walk2
+    clip: {fileID: 8300000, guid: 6561a65bbfd39874ea8fd6452eeed900, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: walk3
+    clip: {fileID: 8300000, guid: 49c39b9a9296d1648a618b32ca5f7c06, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: walk4
+    clip: {fileID: 8300000, guid: 545cb3c658944434fa7400feadd03aa7, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: walk5
+    clip: {fileID: 8300000, guid: 616cfc4a5868dcc4eb9d4906f76a522b, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: walk6
+    clip: {fileID: 8300000, guid: c4776ee3efbc8a1478d2ef7301ae2cff, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: walk7
+    clip: {fileID: 8300000, guid: acbb05585967ac243a86e780df63ef79, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run1
+    clip: {fileID: 8300000, guid: fd3154f24fd70b741b99497027a75845, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run2
+    clip: {fileID: 8300000, guid: d0f9f7e13e469784bbfe2889fa7def31, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run3
+    clip: {fileID: 8300000, guid: 413701771853802438b79838e0e3d46b, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run4
+    clip: {fileID: 8300000, guid: dac035004ccf9b54299d13781e2103e1, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run5
+    clip: {fileID: 8300000, guid: fc96a4759c29da145b40496801abe79b, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run6
+    clip: {fileID: 8300000, guid: 4a02e33abcd649143bdf8edd0eeba620, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: run7
+    clip: {fileID: 8300000, guid: 70f6525f01390cc42aadac5116536bd7, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: shot1
+    clip: {fileID: 8300000, guid: 5944bd6be59b9c34d9ce144345367036, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: shot2
+    clip: {fileID: 8300000, guid: ee5a46e1ef23c1b4d805061d49700e9e, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: rest
+    clip: {fileID: 8300000, guid: dca6604031beaf2498eb898017174998, type: 3}
+    volume: 2
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
