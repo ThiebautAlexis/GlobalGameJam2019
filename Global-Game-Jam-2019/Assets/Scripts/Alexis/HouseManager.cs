@@ -36,7 +36,7 @@ public class HouseManager : MonoBehaviour
 
     public void StartRegeneration()
     {
-        if (debugSprite) if (debugSprite) debugSprite.SetActive(true);
+        if (debugSprite) debugSprite.SetActive(true);
         StartCoroutine(RegeneratePlayer()); 
     }
     void StopRegeneration()

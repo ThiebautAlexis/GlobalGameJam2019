@@ -42,7 +42,7 @@ public class Character : MonoBehaviour
         set
         {
             energy = value;
-            Mathf.Clamp(energy, 0, maxEnergy);
+            energy = Mathf.Clamp(energy, 0, maxEnergy);
             characterAnimator.SetBool("IsExhausted", IsExhausted); 
         }
     }
@@ -61,6 +61,7 @@ public class Character : MonoBehaviour
 
     [SerializeField] private LayerMask cellLayer;
     [SerializeField] private SpriteRenderer renderer; 
+
     private Cell currentCell;
     public Cell CurrentCell { get { return currentCell; } }
 
@@ -89,6 +90,11 @@ public class Character : MonoBehaviour
                 {
                     characterAnimator.SetBool("IsMoving", false);
                     isMoving = false;
+                    if (currentCell.State == CellState.House)
+                    {
+                        HouseManager.Instance.StartRegeneration();
+                        // QUAND MAISON -> DESACTIVATE SPRITE
+                    }
                     yield break; 
                 }
                 Vector2 _dir = _pathToFollow[_index] - currentCell.TilePosition;
@@ -122,7 +128,7 @@ public class Character : MonoBehaviour
                 StartCoroutine(FollowPath(_cellPath)); 
             }
         }
-        else if(Input.GetKeyDown(KeyCode.Mouse1) && energy > 0)
+        else if(Input.GetKeyDown(KeyCode.Mouse1) && energy > 0 && currentCell.State != CellState.House)
         {
             _hit = (Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 1, cellLayer));
             if(_hit)
@@ -133,6 +139,7 @@ public class Character : MonoBehaviour
                 UpdateOrientation(_dir);
                 characterAnimator.SetTrigger("SprayWater"); 
                 WaterJet _jet = Instantiate(waterJetPrefab, transform.position, Quaternion.identity).GetComponent<WaterJet>();
+                // ROTATE THE JET
                 _jet.ApplyDirection(_dir, WaterJetRange);
                 Energy -= waterJetCost;
             }
@@ -152,7 +159,8 @@ public class Character : MonoBehaviour
         //Si comrpis entre -90 et -180 -> SW
         else orientation = Orientation.SouthWest;
 
-        //Check si on doit inverser le sprite ou non -> Pour le faire regarder dans les 2 directions
+        //Check si on doit inverser le sprite ou non -> Pour le faire regarder dans les 2 
+        renderer.flipX = orientation == Orientation.NorthWest || orientation == Orientation.SouthWest; 
         
     }
 
