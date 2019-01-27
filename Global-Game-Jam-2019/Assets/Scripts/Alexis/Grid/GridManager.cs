@@ -122,8 +122,12 @@ public class GridManager : MonoBehaviour
     #endregion
 
     #region SpawnGarbages
-    void SpawnGarbage()
+    IEnumerator SpawnGarbage()
     {
+        while (UIManager.Instance.IsPaused)
+        {
+            yield return new WaitForSeconds(1); 
+        }
         Cell _makeDirtyCell;
         if (!cells.Any(c => c.State == CellState.Dirty))
         {
@@ -138,27 +142,35 @@ public class GridManager : MonoBehaviour
         {
             List<Cell> _dirtyCells = cells.Where(c => c.State == CellState.Dirty).ToList();
             List<Cell> _linkedFreeCells;
-            Cell _cell; 
+            Cell _cell;
             foreach (Cell c in _dirtyCells)
             {
-                _linkedFreeCells = new List<Cell>(); 
+                _linkedFreeCells = new List<Cell>();
                 for (int i = 0; i < c.LinkedPosition.Count; i++)
                 {
-                    _cell = GetCellFromPosition(c.LinkedPosition[i]); 
-                    if(_cell.State == CellState.Free)
-                        _linkedFreeCells.Add(_cell); 
+                    _cell = GetCellFromPosition(c.LinkedPosition[i]);
+                    if (_cell.State == CellState.Free)
+                        _linkedFreeCells.Add(_cell);
                 }
-                if (_linkedFreeCells.Count == 0) continue; 
+                if (_linkedFreeCells.Count == 0) continue;
                 int _index = Random.Range(0, _linkedFreeCells.Count - 1);
-                _makeDirtyCell = _linkedFreeCells[_index]; 
+                _makeDirtyCell = _linkedFreeCells[_index];
                 _makeDirtyCell.SetState(CellState.Dirty);
                 BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
-                _d.LinkedCell = _makeDirtyCell; 
+                _d.LinkedCell = _makeDirtyCell;
             }
         }
+        yield return new WaitForSeconds(5);
+        StartCoroutine(SpawnGarbage());
+        yield break; 
     }
     #endregion
     #endregion
+
+    public void StartBehaviour()
+    {
+        StartCoroutine(SpawnGarbage()); 
+    }
 
     #region UnityMethods
     private void Awake()
@@ -177,7 +189,6 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("SpawnGarbage", 0, 5);
     }
 
     // Update is called once per frame
