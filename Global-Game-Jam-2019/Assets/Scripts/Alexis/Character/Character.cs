@@ -118,6 +118,7 @@ public class Character : MonoBehaviour
             if(Vector3.Distance(transform.position, _pathToFollow[_index]) < .1f)
             {
                 currentCell = GridManager.Instance.GetCellFromPosition(_pathToFollow[_index]);
+                //if (renderer) renderer.sortingOrder = (int)currentCell.TilePosition.y; 
                 _index++;
                 Energy--; 
                 if (_index >= _pathToFollow.Count)
@@ -330,7 +331,6 @@ public class Character : MonoBehaviour
         currentCell = GridManager.Instance.GetClosestCell(transform.position);
         if (!characterAnimator) characterAnimator = GetComponent<Animator>();
         if (!renderer) renderer = GetComponent<SpriteRenderer>();
-
     }
 
     // Update is called once per frame
