@@ -67,7 +67,7 @@ public class Character : MonoBehaviour
 
     [SerializeField] private Animator characterAnimator;
 
-    private Orientation orientation = Orientation.SouthEast; 
+     [SerializeField] private Orientation orientation = Orientation.SouthEast; 
 
     #endregion
 
@@ -94,6 +94,7 @@ public class Character : MonoBehaviour
                     {
                         HouseManager.Instance.StartRegeneration();
                         // QUAND MAISON -> DESACTIVATE SPRITE
+                        renderer.sortingOrder = -999; 
                     }
                     yield break; 
                 }
@@ -125,6 +126,7 @@ public class Character : MonoBehaviour
                 {
                     return;
                 }
+                if (currentCell.State == CellState.House) renderer.sortingOrder = 1; 
                 StartCoroutine(FollowPath(_cellPath)); 
             }
         }
@@ -139,7 +141,8 @@ public class Character : MonoBehaviour
                 UpdateOrientation(_dir);
                 characterAnimator.SetTrigger("SprayWater"); 
                 WaterJet _jet = Instantiate(waterJetPrefab, transform.position, Quaternion.identity).GetComponent<WaterJet>();
-                // ROTATE THE JET
+                float _angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
+                _jet.transform.rotation = Quaternion.AngleAxis(_angle, Vector3.forward);
                 _jet.ApplyDirection(_dir, WaterJetRange);
                 Energy -= waterJetCost;
             }
@@ -159,6 +162,8 @@ public class Character : MonoBehaviour
         //Si comrpis entre -90 et -180 -> SW
         else orientation = Orientation.SouthWest;
 
+        bool _isNorth = orientation == Orientation.NorthEast || orientation == Orientation.NorthEast;
+        characterAnimator.SetBool("isLookingNorth", _isNorth); 
         //Check si on doit inverser le sprite ou non -> Pour le faire regarder dans les 2 
         renderer.flipX = orientation == Orientation.NorthWest || orientation == Orientation.SouthWest; 
         
