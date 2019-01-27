@@ -40,7 +40,7 @@ public class HouseManager : MonoBehaviour
         if (debugSprite) debugSprite.SetActive(true);
         {
             StartCoroutine(RegeneratePlayer());
-            audio.Volume("Musique ambiance",0.1f);
+            audio.Volume("boucle_tortue",0.1f);
             audio.Play("rest");
             audio.Play("rest_jingle");
         }
@@ -51,7 +51,7 @@ public class HouseManager : MonoBehaviour
         if (debugSprite) if (debugSprite) debugSprite.SetActive(false);
         audio.Stop("rest");
         audio.Stop("rest_jingle");
-        audio.Volume("Musique ambiance", 0.8f);
+        audio.Volume("boucle_tortue", 0.8f);
     }
     IEnumerator RegeneratePlayer()
     {

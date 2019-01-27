@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance; 
     public bool HasGameStarted { get; private set;  }
     public bool IsPaused { get; private set; }
+    public bool ingame;
 
     public float gameTimer = 0;
 
@@ -41,8 +42,9 @@ public class UIManager : MonoBehaviour
             InGameGroup.SetActive(true);
         HasGameStarted = true;
         GridManager.Instance.StartBehaviour();
+        ingame = true;
         audio.Stop("menu_music");
-        audio.Play("Musique ambiance");
+        audio.Play("intro");
     }
 
     void ResumeGame()
@@ -72,6 +74,8 @@ public class UIManager : MonoBehaviour
     void EndGame()
     {
         IsPaused = true;
+        audio.Stop("Musique ambiance");
+        audio.Play("music_fin");
         EndingGroup.SetActive(true); 
     }
 
@@ -95,13 +99,18 @@ public class UIManager : MonoBehaviour
         if (pauseMenuQuitButton)
             pauseMenuQuitButton.onClick.AddListener(() => Application.Quit());
         if (endMenuQuitButton)
-            endMenuQuitButton.onClick.AddListener(() => Application.Quit()); 
+            endMenuQuitButton.onClick.AddListener(() => Application.Quit());
+        ingame = false;
     }
 
     private void Update()
     {
         UpdateFilledBar();
         UpdateTimer(); 
+        if( !audio.IsPlaying("intro")&& ingame && !audio.IsPlaying("boucle_tortue"))
+        {
+            audio.Play("boucle_tortue");
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
             PauseGame(); 
     }
