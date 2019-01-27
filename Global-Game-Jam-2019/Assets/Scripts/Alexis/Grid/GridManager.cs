@@ -128,37 +128,36 @@ public class GridManager : MonoBehaviour
     #region SpawnGarbages
     void SpawnGarbage()
     {
-        Debug.Log("ok"); 
-        if(!cells.Any(c => c.State == CellState.Dirty))
+        Cell _makeDirtyCell;
+        if (!cells.Any(c => c.State == CellState.Dirty))
         {
-            List<Cell> _dirtyCells = cells.Where(c => c.State == CellState.BlackWater ).ToList();
-            Cell _makeDirtyCell;
-            foreach (Cell c in _dirtyCells)
-            {
-                int _index = Random.Range(0, c.LinkedPosition.Count - 1);
-                _makeDirtyCell = GetCellFromPosition(c.LinkedPosition[_index]);
-                if (_makeDirtyCell.State == CellState.Free)
-                {
-                    _makeDirtyCell.SetState(CellState.Dirty);
-                    BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
-                    _d.LinkedCell = _makeDirtyCell;
-                }
-            }
+            List<Cell> _freeCells = cells.Where(c => c.State == CellState.Free).ToList();
+            int _index = Random.Range(0, _freeCells.Count - 1);
+            _makeDirtyCell = _freeCells[_index];
+            _makeDirtyCell.SetState(CellState.Dirty);
+            BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
+            _d.LinkedCell = _makeDirtyCell;
         }
         else
         {
             List<Cell> _dirtyCells = cells.Where(c => c.State == CellState.Dirty).ToList();
-            Cell _makeDirtyCell; 
+            List<Cell> _linkedFreeCells;
+            Cell _cell; 
             foreach (Cell c in _dirtyCells)
             {
-                int _index = Random.Range(0, c.LinkedPosition.Count - 1);
-                _makeDirtyCell = GetCellFromPosition(c.LinkedPosition[_index]); 
-                if(_makeDirtyCell.State == CellState.Free)
+                _linkedFreeCells = new List<Cell>(); 
+                for (int i = 0; i < c.LinkedPosition.Count; i++)
                 {
-                    _makeDirtyCell.SetState(CellState.Dirty);
-                    BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
-                    _d.LinkedCell = _makeDirtyCell; 
+                    _cell = GetCellFromPosition(c.LinkedPosition[i]); 
+                    if(_cell.State == CellState.Free)
+                        _linkedFreeCells.Add(_cell); 
                 }
+                if (_linkedFreeCells.Count == 0) continue; 
+                int _index = Random.Range(0, _linkedFreeCells.Count - 1);
+                _makeDirtyCell = _linkedFreeCells[_index]; 
+                _makeDirtyCell.SetState(CellState.Dirty);
+                BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
+                _d.LinkedCell = _makeDirtyCell; 
             }
         }
     }
@@ -182,7 +181,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("SpawnGarbage", 0, .5f);
+        InvokeRepeating("SpawnGarbage", 0, 5);
     }
 
     // Update is called once per frame
@@ -193,6 +192,7 @@ public class GridManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        /*
         for (int i = 0; i < cells.Count; i++)
         {
             switch (cells[i].State)
@@ -216,7 +216,17 @@ public class GridManager : MonoBehaviour
                     break;
             }
             Gizmos.DrawSphere(cells[i].TilePosition, .2f); 
+            }
+            */
+        Gizmos.color = Color.red; 
+        for (int i = 0; i < cells.Count; i++)
+        {
+            for (int j = 0; j < cells[i].LinkedPosition.Count; j++)
+            {
+                Gizmos.DrawLine(cells[i].TilePosition, cells[i].LinkedPosition[j]); 
+            }
         }
+        
     }
     #endregion
 }

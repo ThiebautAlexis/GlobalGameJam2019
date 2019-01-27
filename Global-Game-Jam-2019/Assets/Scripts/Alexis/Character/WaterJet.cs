@@ -31,9 +31,9 @@ public class WaterJet : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D _collider2D)
+    public void StopProjectile()
     {
-
+        Destroy(gameObject); 
     }
     private void OnDrawGizmos()
     {

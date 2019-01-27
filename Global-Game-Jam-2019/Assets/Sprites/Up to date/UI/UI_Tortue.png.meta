@@ -1,11 +1,24 @@
 fileFormatVersion: 2
-guid: 1a76c127980e41c448f914cc4936f4c3
+guid: fa15a00a374a18141859f1c31ff52013
 TextureImporter:
   fileIDToRecycleName:
-    21300000: spray_tortue_clean_1
-    21300002: SprayN
-    21300004: spray_tortue_clean_3
-    21300006: SprayS
+    21300000: FillingBar
+    21300002: EnergyBarGrid
+    21300004: UI_Tortue_2
+    21300006: UI_Tortue_3
+    21300008: UI_Tortue_4
+    21300010: UI_Tortue_5
+    21300012: UI_Tortue_6
+    21300014: UI_Tortue_7
+    21300016: UI_Tortue_8
+    21300018: UI_Tortue_9
+    21300020: EnergyBar_BG
+    21300022: Button
+    21300024: HouseFeedBack
+    21300026: Splash
+    21300028: UI_Tortue_14
+    21300030: UI_Tortue_15
+    21300032: UI_Tortue_16
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -88,53 +101,33 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spray_tortue_clean_1
+      name: FillingBar
       rect:
         serializedVersion: 2
-        x: 47
-        y: 740
-        width: 103
-        height: 169
-      alignment: 9
-      pivot: {x: 0.5, y: 0.1}
+        x: 677
+        y: 875
+        width: 127
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6b5dd182f5b270541b1988aa4fad6f91
+      spriteID: 5a33e5c56b1d78d478272a6f39aa9442
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SprayN
+      name: EnergyBarGrid
       rect:
         serializedVersion: 2
-        x: 172
-        y: 743
-        width: 133
-        height: 156
-      alignment: 9
-      pivot: {x: 0.5, y: 0.1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2ebfdae77d94fbe4e91d7a17b90324ab
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: spray_tortue_clean_3
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 504
-        width: 106
-        height: 172
+        x: 170
+        y: 810
+        width: 284
+        height: 38
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,27 +135,87 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 942832e38bdd9b0479d5af33055bf603
+      spriteID: fa15efe2d1ff6b9428462a31af147b73
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SprayS
+      name: EnergyBar_BG
       rect:
         serializedVersion: 2
-        x: 164
-        y: 510
-        width: 173
-        height: 146
-      alignment: 9
-      pivot: {x: 0.5, y: 0.1}
+        x: 48
+        y: 632
+        width: 450
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 595e4162788c15844901a047478b2e61
+      spriteID: 6fe6bf798798a824bab74e6c4773dbbd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 655
+        width: 204
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e78c6f135812e57468cf5b0569481a2d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HouseFeedBack
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 118
+        width: 430
+        height: 354
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c385b65528c3ae74bb2ce9d69429f347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Splash
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 211
+        width: 289
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7540fa176fab6744681cb6af0d943061
       vertices: []
       indices: 
       edges: []
@@ -170,7 +223,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 2e3c4167235902b47be67434f8ca00e4
+    spriteID: 7ce44edce16f83b488540d1a0733b577
     vertices: []
     indices: 
     edges: []
