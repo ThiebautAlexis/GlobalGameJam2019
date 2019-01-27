@@ -21,7 +21,7 @@ public class Cell
     #region Field and properties
     public Vector2 TilePosition;
     public List<Vector2> LinkedPosition = new List<Vector2>();
-    private CellState state = CellState.Free; 
+    [SerializeField] private CellState state; 
     public CellState State { get { return state; } }
 
     public float HeuristicCostFromStart { get; set; } = 0;

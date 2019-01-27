@@ -16,6 +16,7 @@ public class BlackMatter : MonoBehaviour
             LinkedCell.SetState(CellState.Free);
         }
         Destroy(gameObject);
+        _collision.GetComponent<WaterJet>().StopProjectile(); 
         return; 
     }
 

@@ -46,6 +46,7 @@ public class Character : MonoBehaviour
 
     [SerializeField] private LayerMask cellLayer;
     private Cell currentCell;
+    public Cell CurrentCell { get { return currentCell; } }
 
     [SerializeField] private Animator characterAnimator;
 
@@ -80,6 +81,7 @@ public class Character : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isMoving = false; 
+        if(currentCell.State == CellState.House) HouseManager.Instance.StartRegeneration(); 
     }
 
     void CheckInput()
@@ -181,7 +183,7 @@ public class Character : MonoBehaviour
             {
                 Cell _linkedCell = _cellDatas.Where(c => c.TilePosition == _currentCell.LinkedPosition[i]).FirstOrDefault();
                 // If the linked points is not selected yet
-                if (!_linkedCell.HasBeenSelected && _linkedCell.State == CellState.Free)
+                if (!_linkedCell.HasBeenSelected && _linkedCell.State != CellState.NonNavigable)
                 {
                     // Calculate the heuristic cost from start of the linked point
                     _cost = _currentCell.HeuristicCostFromStart + 1;
