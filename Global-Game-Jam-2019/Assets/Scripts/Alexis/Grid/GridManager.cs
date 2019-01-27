@@ -73,18 +73,14 @@ public class GridManager : MonoBehaviour
                     Cell _cell = new Cell(_tilePosition, _linkedTiles);
 
                     //
-                    Sprite _tileSprite = _tile.sprite; 
-                    if(dirtyTile == _tileSprite)
+                    Sprite _tileSprite = _tile.sprite;
+                    if (dirtyTile == _tileSprite)
                     {
-                        _cell.SetState(CellState.BlackWater); 
+                        _cell.SetState(CellState.BlackWater);
                     }
-                    else if(decorTiles.Any(s => s == _tileSprite))
+                    else if (_tileSprite == house)
                     {
-                        _cell.SetState(CellState.NonNavigable);
-                    }
-                    else if(_tileSprite == house)
-                    {
-                        _cell.SetState(CellState.House); 
+                        _cell.SetState(CellState.House);
                     }
                     cells.Add(_cell);
                 }
