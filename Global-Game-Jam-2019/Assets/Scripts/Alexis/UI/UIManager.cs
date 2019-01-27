@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject MenuGroup;
     [SerializeField] GameObject PauseMenu;
     [SerializeField] GameObject EndingGroup;
+    [SerializeField] AudioManager audio;
 
     [SerializeField] Button playButton;
     [SerializeField] Button mainMenuExitButton;
@@ -39,7 +40,9 @@ public class UIManager : MonoBehaviour
         if (InGameGroup)
             InGameGroup.SetActive(true);
         HasGameStarted = true;
-        GridManager.Instance.StartBehaviour(); 
+        GridManager.Instance.StartBehaviour();
+        audio.Stop("menu_music");
+        audio.Play("Musique ambiance");
     }
 
     void ResumeGame()
