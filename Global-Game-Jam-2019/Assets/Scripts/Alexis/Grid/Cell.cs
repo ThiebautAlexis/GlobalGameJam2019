@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq; 
 using UnityEngine;
-using UnityEngine.Tilemaps; 
 
 /*
  * Cell:
@@ -46,6 +45,7 @@ public class Cell
     }
     public void MakeCellDirty() => state = CellState.Dirty;
     public void MakeCellNonNavigable() => state = CellState.NonNavigable;
+    public void SetState(CellState _state) => state = _state; 
     #endregion
 }
 
@@ -53,5 +53,7 @@ public enum CellState
 {
     Free, 
     NonNavigable, 
-    Dirty
+    Dirty, 
+    BlackWater, 
+    House
 }
