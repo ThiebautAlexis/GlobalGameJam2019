@@ -23,9 +23,15 @@ public class GridManager : MonoBehaviour
     public Tilemap Tilemap { get { return tilemap; } }
     [SerializeField] private List<Cell> cells = new List<Cell>();
     public List<Cell> Cells { get { return cells; } }
+
+    [SerializeField] Sprite dirtyTile;
+    [SerializeField] Sprite[] decorTiles;
+    [SerializeField] Sprite house;
+    [SerializeField] BlackMatter blackMatterPrefab; 
     #endregion
 
     #region Methods
+    #region Grid
     /// <summary>
     /// Generate the grid with a radius for the X and Y Axis
     /// </summary>
@@ -64,8 +70,22 @@ public class GridManager : MonoBehaviour
                     if (tilemap.HasTile(_coordinate))
                         _linkedTiles.Add(tilemap.GetCellCenterWorld(_coordinate));
 
+                    Cell _cell = new Cell(_tilePosition, _linkedTiles);
+
                     //
-                    Cell _cell = new Cell(_tilePosition, _linkedTiles); 
+                    Sprite _tileSprite = _tile.sprite; 
+                    if(dirtyTile == _tileSprite)
+                    {
+                        _cell.SetState(CellState.BlackWater); 
+                    }
+                    else if(decorTiles.Any(s => s == _tileSprite))
+                    {
+                        _cell.SetState(CellState.NonNavigable);
+                    }
+                    else if(_tileSprite == house)
+                    {
+                        _cell.SetState(CellState.House); 
+                    }
                     cells.Add(_cell);
                 }
             }
@@ -81,16 +101,6 @@ public class GridManager : MonoBehaviour
         {
            cells.Clear();
         }
-    }
-
-    /// <summary>
-    /// Check the path to reach a particulary tile
-    /// </summary>
-    /// <returns></returns>
-    public List<Cell> ComputePath(Cell _start, Cell _end)
-    {
-
-        return null; 
     }
 
     public Cell GetClosestCell(Vector2 _position)
@@ -113,7 +123,46 @@ public class GridManager : MonoBehaviour
         if (_c == null) return GetClosestCell(_position);
         return _c; 
     }
+    #endregion
 
+    #region SpawnGarbages
+    void SpawnGarbage()
+    {
+        Debug.Log("ok"); 
+        if(!cells.Any(c => c.State == CellState.Dirty))
+        {
+            List<Cell> _dirtyCells = cells.Where(c => c.State == CellState.BlackWater ).ToList();
+            Cell _makeDirtyCell;
+            foreach (Cell c in _dirtyCells)
+            {
+                int _index = Random.Range(0, c.LinkedPosition.Count - 1);
+                _makeDirtyCell = GetCellFromPosition(c.LinkedPosition[_index]);
+                if (_makeDirtyCell.State == CellState.Free)
+                {
+                    _makeDirtyCell.SetState(CellState.Dirty);
+                    BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
+                    _d.LinkedCell = _makeDirtyCell;
+                }
+            }
+        }
+        else
+        {
+            List<Cell> _dirtyCells = cells.Where(c => c.State == CellState.Dirty).ToList();
+            Cell _makeDirtyCell; 
+            foreach (Cell c in _dirtyCells)
+            {
+                int _index = Random.Range(0, c.LinkedPosition.Count - 1);
+                _makeDirtyCell = GetCellFromPosition(c.LinkedPosition[_index]); 
+                if(_makeDirtyCell.State == CellState.Free)
+                {
+                    _makeDirtyCell.SetState(CellState.Dirty);
+                    BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
+                    _d.LinkedCell = _makeDirtyCell; 
+                }
+            }
+        }
+    }
+    #endregion
     #endregion
 
     #region UnityMethods
@@ -133,13 +182,41 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        InvokeRepeating("SpawnGarbage", 0, .5f);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void OnDrawGizmos()
+    {
+        for (int i = 0; i < cells.Count; i++)
+        {
+            switch (cells[i].State)
+            {
+                case CellState.Free:
+                    Gizmos.color = Color.green; 
+                    break;
+                case CellState.NonNavigable:
+                    Gizmos.color = Color.red;
+                    break;
+                case CellState.Dirty:
+                    Gizmos.color = Color.blue;
+                    break;
+                case CellState.BlackWater:
+                    Gizmos.color = Color.black;
+                    break;
+                case CellState.House:
+                    Gizmos.color = Color.cyan; 
+                    break;
+                default:
+                    break;
+            }
+            Gizmos.DrawSphere(cells[i].TilePosition, .2f); 
+        }
     }
     #endregion
 }

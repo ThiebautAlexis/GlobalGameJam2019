@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class Decor : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        BlockTile(); 
     }
 
-    // Update is called once per frame
-    void Update()
+    void BlockTile()
     {
-        
+        Cell _c = GridManager.Instance.GetCellFromPosition(transform.position);
+        _c.MakeCellNonNavigable(); 
     }
 }
