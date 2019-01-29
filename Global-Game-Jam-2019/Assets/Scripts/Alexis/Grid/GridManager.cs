@@ -28,6 +28,17 @@ public class GridManager : MonoBehaviour
     [SerializeField] Sprite[] decorTiles;
     [SerializeField] Sprite house;
     [SerializeField] BlackMatter blackMatterPrefab; 
+
+    public float SpawnTiming
+    {
+        get
+        {
+            if (!UIManager.Instance) return 5;
+            if (UIManager.Instance.GameTimer < 120) return 10;
+            else if (UIManager.Instance.GameTimer < 280) return 5;
+            else return 1; 
+        }
+    }
     #endregion
 
     #region Methods
@@ -145,6 +156,7 @@ public class GridManager : MonoBehaviour
             Cell _cell;
             foreach (Cell c in _dirtyCells)
             {
+                if (Random.Range(0, 100) > 50) continue;  
                 _linkedFreeCells = new List<Cell>();
                 for (int i = 0; i < c.LinkedPosition.Count; i++)
                 {

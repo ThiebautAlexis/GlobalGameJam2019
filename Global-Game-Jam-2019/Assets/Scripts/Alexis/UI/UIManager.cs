@@ -10,7 +10,8 @@ public class UIManager : MonoBehaviour
     public bool IsPaused { get; private set; }
     public bool ingame;
 
-    public float gameTimer = 0;
+    float gameTimer = 0;
+    public float GameTimer { get { return gameTimer; } }
 
     [SerializeField] Image filledBar;
     [SerializeField] Character character;

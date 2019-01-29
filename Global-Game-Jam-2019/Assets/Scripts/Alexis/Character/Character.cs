@@ -164,7 +164,7 @@ public class Character : MonoBehaviour
                 {
                     return;
                 }
-                if (currentCell.State == CellState.House) renderer.sortingOrder = 1; 
+                if (currentCell.State == CellState.House) renderer.sortingOrder = 2; 
                 StartCoroutine(FollowPath(_cellPath)); 
             }
         }
