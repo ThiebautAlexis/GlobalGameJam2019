@@ -33,10 +33,10 @@ public class GridManager : MonoBehaviour
     {
         get
         {
-            if (!UIManager.Instance) return 5;
-            if (UIManager.Instance.GameTimer < 120) return 10;
-            else if (UIManager.Instance.GameTimer < 280) return 5;
-            else return 1; 
+            if (!UIManager.Instance) return 20;
+            if (UIManager.Instance.GameTimer < 180) return 10;
+            else if (UIManager.Instance.GameTimer < 300) return 7;
+            else return 5; 
         }
     }
     #endregion
@@ -142,7 +142,7 @@ public class GridManager : MonoBehaviour
         Cell _makeDirtyCell;
         if (!cells.Any(c => c.State == CellState.Dirty))
         {
-            List<Cell> _freeCells = cells.Where(c => c.State == CellState.Free).ToList();
+            List<Cell> _freeCells = cells.Where(c => c.State == CellState.Free && (c.TilePosition.x < -5 || c.TilePosition.x > 5) && (c.TilePosition.y < -5 || c.TilePosition.y > 5)).ToList();
             int _index = Random.Range(0, _freeCells.Count - 1);
             _makeDirtyCell = _freeCells[_index];
             _makeDirtyCell.SetState(CellState.Dirty);
@@ -170,9 +170,13 @@ public class GridManager : MonoBehaviour
                 _makeDirtyCell.SetState(CellState.Dirty);
                 BlackMatter _d = Instantiate(blackMatterPrefab, _makeDirtyCell.TilePosition, Quaternion.identity);
                 _d.LinkedCell = _makeDirtyCell;
+                if (_makeDirtyCell.LinkedPosition.Any(l => GetCellFromPosition(l).State == CellState.House))
+                {
+                    UIManager.Instance.LooseGame();
+                }
             }
         }
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(SpawnTiming);
         StartCoroutine(SpawnGarbage());
         yield break; 
     }
@@ -196,17 +200,6 @@ public class GridManager : MonoBehaviour
             Destroy(this.gameObject);
             return; 
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void OnDrawGizmos()

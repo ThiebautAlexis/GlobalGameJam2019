@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq; 
 using UnityEngine;
 using UnityEngine.UI; 
 
@@ -8,7 +9,15 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance; 
     public bool HasGameStarted { get; private set;  }
     public bool IsPaused { get; private set; }
-    public bool ingame;
+    public bool Ingame;
+    public bool IsGoodEnding
+    {
+        get
+        {
+            if (!GridManager.Instance) return true;
+            return GridManager.Instance.Cells.Where(c => c.State == CellState.Dirty).ToList().Count < GridManager.Instance.Cells.Count / 2;  
+        }
+    }
 
     float gameTimer = 0;
     public float GameTimer { get { return gameTimer; } }
@@ -19,14 +28,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject InGameGroup;
     [SerializeField] GameObject MenuGroup;
     [SerializeField] GameObject PauseMenu;
-    [SerializeField] GameObject EndingGroup;
+    [SerializeField] GameObject BadEndingGroup;
+    [SerializeField] GameObject GoodEndingGroup;
+    [SerializeField] GameObject CreditGroup; 
     [SerializeField] AudioManager audio;
 
     [SerializeField] Button playButton;
     [SerializeField] Button mainMenuExitButton;
     [SerializeField] Button pauseMenuResumeButton;
     [SerializeField] Button pauseMenuQuitButton;
-    [SerializeField] Button endMenuQuitButton; 
+    [SerializeField] Button endMenuQuitButton;
+    [SerializeField] Button badEndMenuQuitButton;
+    [SerializeField] Button creditButton;
+    [SerializeField] Button backCreditButton; 
 
 
     void UpdateFilledBar()
@@ -43,9 +57,9 @@ public class UIManager : MonoBehaviour
             InGameGroup.SetActive(true);
         HasGameStarted = true;
         GridManager.Instance.StartBehaviour();
-        ingame = true;
+        Ingame = true;
         audio.Stop("menu_music");
-        audio.Play("intro");
+        audio.Play("Musique ambiance");
     }
 
     void ResumeGame()
@@ -72,12 +86,50 @@ public class UIManager : MonoBehaviour
         gameTimer += Time.deltaTime;
         if (gameTimer >= 356) EndGame(); 
     }
+
     void EndGame()
     {
         IsPaused = true;
         audio.Stop("Musique ambiance");
-        audio.Play("music_fin");
-        EndingGroup.SetActive(true); 
+        if (IsGoodEnding)
+        {
+            audio.Play("music_good_ending");
+            if (GoodEndingGroup) ; 
+            GoodEndingGroup.SetActive(true);
+        }
+        else
+        {
+            audio.Play("music_bad_ending");
+            if (BadEndingGroup)
+                BadEndingGroup.SetActive(true);
+        }
+    }
+
+    public void LooseGame()
+    {
+        IsPaused = true;
+        audio.Stop("Musique ambiance");
+        audio.Play("music_bad_ending");
+        if(BadEndingGroup)
+            BadEndingGroup.SetActive(true);
+    }
+
+    public void ShowCredits()
+    {
+       if(CreditGroup && MenuGroup)
+       {
+            CreditGroup.SetActive(true);
+            MenuGroup.SetActive(false); 
+       }
+    }
+
+    public void HideCredits()
+    {
+        if (CreditGroup && MenuGroup)
+        {
+            CreditGroup.SetActive(false);
+            MenuGroup.SetActive(true);
+        }
     }
 
     private void Awake()
@@ -87,6 +139,7 @@ public class UIManager : MonoBehaviour
             Instance = this;
         }
     }
+
     void Start()
     {
         if(!character)
@@ -101,14 +154,20 @@ public class UIManager : MonoBehaviour
             pauseMenuQuitButton.onClick.AddListener(() => Application.Quit());
         if (endMenuQuitButton)
             endMenuQuitButton.onClick.AddListener(() => Application.Quit());
-        ingame = false;
+        if(badEndMenuQuitButton)
+            badEndMenuQuitButton.onClick.AddListener(() => Application.Quit());
+        if (creditButton)
+            creditButton.onClick.AddListener(ShowCredits);
+        if (backCreditButton)
+            backCreditButton.onClick.AddListener(HideCredits);
+        Ingame = false;
     }
 
     private void Update()
     {
         UpdateFilledBar();
         UpdateTimer(); 
-        if( !audio.IsPlaying("intro")&& ingame && !audio.IsPlaying("boucle_tortue"))
+        if( !audio.IsPlaying("intro")&& Ingame && !audio.IsPlaying("boucle_tortue"))
         {
             audio.Play("boucle_tortue");
         }

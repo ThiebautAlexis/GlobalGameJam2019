@@ -30,7 +30,7 @@ public class Character : MonoBehaviour
 
     [SerializeField, Range(1,5)] private int speed = 1;
 
-    [SerializeField, Range(10, 100)] private int maxEnergy = 100;
+    [SerializeField, Range(10, 500)] private int maxEnergy = 100;
     public int MaxEnergy { get { return maxEnergy; } }
     [SerializeField] int energy = 100;
 
