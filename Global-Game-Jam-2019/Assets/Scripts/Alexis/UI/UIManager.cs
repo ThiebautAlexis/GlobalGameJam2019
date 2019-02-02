@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
     {
         if (!HasGameStarted || IsPaused) return;
         gameTimer += Time.deltaTime;
-        if (gameTimer >= 356) EndGame(); 
+        if (gameTimer >= 252) EndGame(); 
     }
 
     void EndGame()

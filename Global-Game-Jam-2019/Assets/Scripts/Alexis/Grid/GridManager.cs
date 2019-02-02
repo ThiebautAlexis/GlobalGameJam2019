@@ -34,8 +34,18 @@ public class GridManager : MonoBehaviour
         get
         {
             if (!UIManager.Instance) return 20;
-            if (UIManager.Instance.GameTimer < 180) return 10;
-            else if (UIManager.Instance.GameTimer < 300) return 7;
+            if (UIManager.Instance.GameTimer < 112)
+            {
+                if (cells.Where(c => c.State == CellState.Dirty).ToList().Count > 10)
+                    return 10;
+                else return 7; 
+            }
+            else if (UIManager.Instance.GameTimer < 220)
+            {
+                if (cells.Where(c => c.State == CellState.Dirty).ToList().Count > 10)
+                    return 7;
+                else return 5; 
+            }
             else return 5; 
         }
     }

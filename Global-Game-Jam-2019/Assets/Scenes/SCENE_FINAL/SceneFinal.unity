@@ -2535,7 +2535,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1212408886
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3280,6 +3280,21 @@ PrefabInstance:
       propertyPath: sounds.Array.data[31].loop
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2987549874177955720, guid: a256d0e3a38fa274a9bfef8ad06c7c7a,
+        type: 3}
+      propertyPath: sounds.Array.data[2].name
+      value: Musique ambiance_old
+      objectReference: {fileID: 0}
+    - target: {fileID: 2987549874177955720, guid: a256d0e3a38fa274a9bfef8ad06c7c7a,
+        type: 3}
+      propertyPath: sounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: dddf682bf857c1c45ad50621a6ecfc5a, type: 3}
+    - target: {fileID: 2987549874177955720, guid: a256d0e3a38fa274a9bfef8ad06c7c7a,
+        type: 3}
+      propertyPath: sounds.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: dddf682bf857c1c45ad50621a6ecfc5a, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a256d0e3a38fa274a9bfef8ad06c7c7a, type: 3}
 --- !u!1 &1359550262
