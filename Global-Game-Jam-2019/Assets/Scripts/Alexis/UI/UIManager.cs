@@ -58,6 +58,7 @@ public class UIManager : MonoBehaviour
         HasGameStarted = true;
         GridManager.Instance.StartBehaviour();
         Ingame = true;
+        audio.Play("narrator_start");
         audio.Stop("menu_music");
         audio.Play("Musique ambiance");
     }
